@@ -1,0 +1,11 @@
+1.将项目打成jar包,引入需要的项目中.
+ maven引入：
+ <dependency>
+	 <groupId>com.zdawn</groupId>
+	 <artifactId>jwt-token</artifactId>
+	 <version>1.2.0</version>
+ </dependency>
+ 
+2.创建token项目配置相关参数(参照TokenConfig.java类),配置filter,和获取token时的相关参数.
+
+3.验证token项目配置相关参数(参照TokenFilterConfig.java类),配置filter,和验证token时所需的参数.
