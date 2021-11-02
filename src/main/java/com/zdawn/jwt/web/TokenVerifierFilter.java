@@ -103,13 +103,19 @@ public class TokenVerifierFilter implements Filter {
 					if(token ==null || "".equals(token)) throw new Exception("jwt token为空");
 					String uid = webToken.verifyJwtToken(token);
 					if(checkUid) {
-						String passUid = decoder.decodeUid(req.getHeader(uidHttpHeaderKey));
-						if(passUid==null || !uid.equals(passUid)) throw new Exception("check failure");
+						String inputUid = req.getHeader(uidHttpHeaderKey);
+						if(inputUid ==null || "".equals(inputUid)) {
+							//find from query string
+							inputUid = parseValue(req.getQueryString(), uidHttpHeaderKey);
+						}
+						String passUid = decoder.decodeUid(inputUid);
+						if(passUid==null || !uid.equals(passUid)) throw new Exception("check uid failure");
 					}
 					chain.doFilter(request, response);
 				} catch (Exception e) {
+					res.setContentType("application/json;charset=utf-8");
 					OutputStream outputStream = res.getOutputStream();
-	        		String data = getResultInfo("false",e.getMessage());
+	        		String data = getResultInfo(false,e.getMessage());
 	        		byte[] dataByteArr = data.getBytes("UTF-8");
 	        		outputStream.write(dataByteArr);
 	        		outputStream.flush();
@@ -179,8 +185,8 @@ public class TokenVerifierFilter implements Filter {
         return false;
     }
     
-	private String getResultInfo(String result,String message) {
-		Map<String,String> map = new HashMap<String,String>();
+	private String getResultInfo(boolean result,String message) {
+		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("result",result);
 		map.put("desc",message);
 		//to json
