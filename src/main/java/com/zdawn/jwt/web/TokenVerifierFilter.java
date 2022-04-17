@@ -114,6 +114,7 @@ public class TokenVerifierFilter implements Filter {
 					chain.doFilter(request, response);
 				} catch (Exception e) {
 					res.setContentType("application/json;charset=utf-8");
+					res.addHeader("sessionstatus", "timeout");
 					OutputStream outputStream = res.getOutputStream();
 	        		String data = getResultInfo(false,e.getMessage());
 	        		byte[] dataByteArr = data.getBytes("UTF-8");
