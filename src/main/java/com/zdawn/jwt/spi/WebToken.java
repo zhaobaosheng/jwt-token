@@ -15,11 +15,23 @@ public interface WebToken {
 	 */
 	public String getJwtToken(String uid,String type) throws Exception;
 	/**
+	 * 删除所有的token
+	 * @param uid 身份标识
+	 * @throws Exception
+	 */
+	public void delJwtTokenByUid(String uid) throws Exception;
+	/**
 	 * 验证jwt token，验证失败抛出异常
 	 * @param jwtToken token
 	 * @return uid 身份标识
 	 */
 	public String verifyJwtToken(String jwtToken) throws Exception;
+	/**
+	 * 通过jwtToken删除
+	 * @param jwtToken
+	 * @throws Exception
+	 */
+	public void delJwtToken(String jwtToken) throws Exception;
 	/**
 	 * 清理过期Token
 	 */

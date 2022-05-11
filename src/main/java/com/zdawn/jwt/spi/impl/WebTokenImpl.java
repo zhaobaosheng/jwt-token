@@ -261,7 +261,24 @@ public class WebTokenImpl implements WebToken {
 		if(meteringCount>3) log.warn("计次方式使用次数不推荐大于3");
 		tokenStore.validateTokenConfig(this);
 	}
+	
+	@Override
+	public void delJwtToken(String jwtToken) throws Exception {
+		//解析tokenid
+		Jws<Claims> claims = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(jwtToken);
+		String tokenId = claims.getBody().getId();
+		if(tokenId!=null) tokenStore.delTokenById(tokenId);
+	}
 
+	@Override
+	public void delJwtTokenByUid(String uid) throws Exception {
+		List<Token> list = tokenStore.queryTokenByUserId(uid);
+		if(list==null) return ;
+		for (Token token : list) {
+			tokenStore.delTokenById(token.getTokenId());
+		}
+	}
+	
 	/******************gen auto*****************/
 	
 	public void setExpireTime(int expireTime) {
