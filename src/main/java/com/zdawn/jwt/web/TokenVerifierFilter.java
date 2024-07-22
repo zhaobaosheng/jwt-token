@@ -94,13 +94,15 @@ public class TokenVerifierFilter implements Filter {
 				chain.doFilter(request, response);
 			}else{
 				//获取请求传来的参数
+				String token = null;
 				try {
-					String token = req.getHeader(jwtHttpHeaderKey);
+					token = req.getHeader(jwtHttpHeaderKey);
 					if(token ==null || "".equals(token)){
 						//find query string
 						token = parseValue(req.getQueryString(), jwtHttpHeaderKey);
 					}
 					if(token ==null || "".equals(token)) throw new Exception("jwt token为空");
+					
 					String uid = webToken.verifyJwtToken(token);
 					if(checkUid) {
 						String inputUid = req.getHeader(uidHttpHeaderKey);
@@ -113,14 +115,25 @@ public class TokenVerifierFilter implements Filter {
 					}
 					chain.doFilter(request, response);
 				} catch (Exception e) {
-					res.setContentType("application/json;charset=utf-8");
-					res.addHeader("sessionstatus", "timeout");
-					OutputStream outputStream = res.getOutputStream();
-	        		String data = getResultInfo(false,e.getMessage());
-	        		byte[] dataByteArr = data.getBytes("UTF-8");
-	        		outputStream.write(dataByteArr);
-	        		outputStream.flush();
-	        		outputStream.close();
+					if(token ==null || "".equals(token)) {
+						res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+						res.setContentType("application/json;charset=utf-8");
+						OutputStream outputStream = res.getOutputStream();
+		        		String data = getResultInfo(false,"NOT FOUND");
+		        		byte[] dataByteArr = data.getBytes("UTF-8");
+		        		outputStream.write(dataByteArr);
+		        		outputStream.flush();
+		        		outputStream.close();
+					}else {
+						res.setContentType("application/json;charset=utf-8");
+						res.addHeader("sessionstatus", "timeout");
+						OutputStream outputStream = res.getOutputStream();
+		        		String data = getResultInfo(false,e.getMessage());
+		        		byte[] dataByteArr = data.getBytes("UTF-8");
+		        		outputStream.write(dataByteArr);
+		        		outputStream.flush();
+		        		outputStream.close();
+					}
 				}
 			}
 		} catch (Exception e) {

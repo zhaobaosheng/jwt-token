@@ -87,7 +87,7 @@ public class WebTokenImpl implements WebToken {
 		int tokenType = 2;//timekeeping
 		if("metering".equals(type)) tokenType = 1;
 		token.setTokenType(tokenType);
-		token.setUseNumber(1);
+		token.setUseNumber(0);
 		return token;
 	}
 	
