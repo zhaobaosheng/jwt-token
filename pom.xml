@@ -23,7 +23,7 @@
       <url>https://github.com/zhaobaosheng/jwt-token</url>
       <connection>scm:git:https://github.com/zhaobaosheng/jwt-token.git</connection>
       <developerConnection>scm:git:https://github.com/zhaobaosheng/jwt-token.git</developerConnection>
-      <tag>jwt-token-1.2.0</tag>
+      <tag>jwt-token-1.2.4</tag>
   </scm>
 
   <developers>
